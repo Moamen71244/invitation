@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Engagement Invitation</title>
+  <style>
+    :root {
+      --bg-start: #fbf8f3;
+      --bg-end: #f3ece3;
+      --card: #fffdf9;
+      --primary: #7b5e57;
+      --text: #3f3a37;
+      --muted: #7d7570;
+      --line: #e8ded3;
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: linear-gradient(180deg, var(--bg-start) 0%, var(--bg-end) 100%);
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      color: var(--text);
+    }
+
+    .full-screen-section {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 12px;
+    }
+
+    .card {
+      width: 100%;
+      max-width: 420px;
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      padding: 24px 18px;
+      text-align: center;
+      box-shadow: 0 10px 24px rgba(82, 70, 62, 0.08);
+    }
+
+    .small {
+      font-size: 0.78rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin: 0 0 10px;
+    }
+
+    .title {
+      margin: 0;
+      font-size: clamp(1.7rem, 7vw, 2.2rem);
+      line-height: 1.2;
+      color: var(--primary);
+      font-weight: 600;
+    }
+
+    .divider {
+      width: 72px;
+      height: 2px;
+      background: var(--line);
+      margin: 16px auto 14px;
+    }
+
+    .message {
+      margin: 0 auto 16px;
+      line-height: 1.75;
+      font-size: 0.98rem;
+      color: var(--text);
+    }
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .info-card {
+      padding: 12px 14px;
+      border-radius: 14px;
+      border: 1px solid var(--line);
+      background: #fffcf8;
+      text-align: left;
+    }
+
+    .info-label {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--muted);
+      margin-bottom: 4px;
+    }
+
+    .info-main {
+      font-size: 1rem;
+      font-weight: 500;
+      color: var(--primary);
+    }
+
+    .venue-link {
+      color: var(--primary);
+      text-decoration: none;
+      border-bottom: 1px dashed rgba(123, 94, 87, 0.5);
+      padding-bottom: 1px;
+      word-break: break-word;
+    }
+
+    .venue-link:hover {
+      opacity: 0.85;
+    }
+
+    .footer {
+      margin-top: 20px;
+      font-size: 0.9rem;
+      color: var(--muted);
+      line-height: 1.65;
+    }
+
+    .first-photo {
+      margin-top: 12px;
+      width: 100%;
+      max-width: 300px;
+      border-radius: 14px;
+      border: 1px solid var(--line);
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+      object-fit: cover;
+      background: #f6efe7;
+    }
+
+    .slider {
+      position: relative;
+      border-radius: 14px;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      background: #f6efe7;
+      width: 100%;
+      max-width: 420px;
+      margin: 0 auto;
+    }
+
+    .slide-image {
+      display: block;
+      width: 100%;
+      height: 280px;
+      object-fit: cover;
+    }
+
+    .slider-controls {
+      position: absolute;
+      inset: auto 0 10px 0;
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      border: none;
+      background: rgba(255, 255, 255, 0.72);
+      padding: 0;
+      cursor: pointer;
+    }
+
+    .dot.active {
+      background: #7b5e57;
+    }
+
+    .nav-btn {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      border: 0;
+      background: rgba(255, 253, 249, 0.9);
+      color: #7b5e57;
+      font-size: 18px;
+      cursor: pointer;
+      display: grid;
+      place-items: center;
+    }
+
+    .nav-btn.left {
+      left: 8px;
+    }
+
+    .nav-btn.right {
+      right: 8px;
+    }
+
+    .intro-screen {
+      width: 100%;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+
+    .envelope-wrap {
+      width: min(92vw, 380px);
+      perspective: 900px;
+      text-align: center;
+    }
+
+    .envelope {
+      position: relative;
+      width: 100%;
+      height: 230px;
+      border-radius: 16px;
+      border: 1px solid #dccdc0;
+      background: linear-gradient(180deg, #fffaf4 0%, #f2e5d8 100%);
+      box-shadow: 0 14px 30px rgba(85, 62, 45, 0.16);
+      overflow: hidden;
+    }
+
+    .flap {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 55%;
+      background: linear-gradient(180deg, #f6e9dc 0%, #ebd8c7 100%);
+      clip-path: polygon(0 0, 100% 0, 50% 100%);
+      transform-origin: top center;
+      transition: transform 1s ease;
+      z-index: 3;
+    }
+
+    .letter {
+      position: absolute;
+      left: 12%;
+      bottom: 12px;
+      width: 76%;
+      height: 72%;
+      border-radius: 12px;
+      border: 1px solid #e3d5c8;
+      background: #fffdf9;
+      display: grid;
+      place-items: center;
+      color: var(--primary);
+      font-weight: 600;
+      transform: translateY(0);
+      transition: transform 1s ease;
+      z-index: 2;
+    }
+
+    .envelope.open .flap {
+      transform: rotateX(170deg);
+    }
+
+    .envelope.open .letter {
+      transform: translateY(-36px);
+    }
+
+    .open-btn {
+      margin-top: 16px;
+      border: 0;
+      border-radius: 999px;
+      padding: 10px 20px;
+      background: linear-gradient(135deg, #7b5e57 0%, #9e786d 100%);
+      color: #fffdf9;
+      font-size: 0.95rem;
+      cursor: pointer;
+      box-shadow: 0 8px 20px rgba(82, 70, 62, 0.28);
+    }
+
+    .blur-flash {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0;
+      background:
+        radial-gradient(circle at center, rgba(255, 250, 245, 0.96) 0%, rgba(255, 248, 240, 0.86) 40%, rgba(255, 245, 236, 0) 72%);
+      backdrop-filter: blur(0px);
+      transition: opacity 0.45s ease, backdrop-filter 0.7s ease;
+      z-index: 50;
+    }
+
+    .blur-flash.active {
+      opacity: 1;
+      backdrop-filter: blur(13px);
+    }
+
+    .main-page {
+      opacity: 0;
+      transform: translateY(14px);
+      transition: opacity 0.9s ease, transform 0.9s ease;
+    }
+
+    .main-page.ready {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @media (min-width: 768px) {
+      .card {
+        max-width: 680px;
+        padding: 40px 34px;
+        border-radius: 24px;
+      }
+
+      .full-screen-section {
+        padding: 18px 24px;
+      }
+
+      .slider {
+        max-width: 680px;
+      }
+
+      .small {
+        font-size: 0.92rem;
+      }
+
+      .title {
+        font-size: clamp(2.2rem, 5vw, 3rem);
+      }
+
+      .footer {
+        font-size: 0.96rem;
+      }
+
+      .slide-image {
+        height: 420px;
+      }
+
+      .envelope {
+        height: 260px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+
+  <script>
+    const e = React.createElement;
+    const { useState, useEffect, useRef } = React;
+    const PHOTOS = [
+      "https://i.pinimg.com/1200x/8f/b9/b3/8fb9b3fcf35426ccb28ae19560db819a.jpg",
+      "https://i.pinimg.com/736x/62/8d/1b/628d1be08ff95fa6099f1a3fbe4fcc0b.jpg",
+    ];
+
+    function IntroScreen(props) {
+      return e(
+        "div",
+        { className: "intro-screen" },
+        e(
+          "div",
+          { className: "envelope-wrap" },
+          e(
+            "div",
+            { className: "envelope" + (props.isOpening ? " open" : "") },
+            e("div", { className: "flap" }),
+            e("div", { className: "letter" }, "Engagement Invitation")
+          ),
+          e(
+            "button",
+            { className: "open-btn", type: "button", onClick: props.onOpen },
+            props.isOpening ? "Opening..." : "Open Invitation"
+          )
+        )
+      );
+    }
+
+    function ImageSlider() {
+      const [index, setIndex] = useState(0);
+
+      useEffect(function () {
+        const t = window.setInterval(function () {
+          setIndex(function (v) {
+            return (v + 1) % PHOTOS.length;
+          });
+        }, 3200);
+        return function () {
+          window.clearInterval(t);
+        };
+      }, []);
+
+      function goLeft() {
+        setIndex(function (v) {
+          return (v - 1 + PHOTOS.length) % PHOTOS.length;
+        });
+      }
+
+      function goRight() {
+        setIndex(function (v) {
+          return (v + 1) % PHOTOS.length;
+        });
+      }
+
+      return e(
+        "section",
+        { className: "slider" },
+        e("img", {
+          className: "slide-image",
+          src: PHOTOS[index],
+          alt: "Engagement memory",
+          loading: "eager",
+        }),
+        e(
+          "button",
+          { className: "nav-btn left", type: "button", onClick: goLeft, "aria-label": "Previous photo" },
+          "<"
+        ),
+        e(
+          "button",
+          { className: "nav-btn right", type: "button", onClick: goRight, "aria-label": "Next photo" },
+          ">"
+        ),
+        e(
+          "div",
+          { className: "slider-controls" },
+          PHOTOS.map(function (_, i) {
+            return e("button", {
+              key: i,
+              type: "button",
+              className: "dot" + (i === index ? " active" : ""),
+              onClick: function () {
+                setIndex(i);
+              },
+              "aria-label": "Go to slide " + (i + 1),
+            });
+          })
+        )
+      );
+    }
+
+    function InvitationCard() {
+      return e(
+        React.Fragment,
+        null,
+        e(
+          "section",
+          { className: "full-screen-section" },
+          e(
+            "main",
+            { className: "card" },
+            e("p", { className: "small" }, "Private Invite"),
+            e(
+              "h1",
+              { className: "title" },
+              "You are invited to our engagement party"
+            ),
+            e("div", { className: "divider" }),
+            e(
+              "p",
+              { className: "message" },
+              "With hearts full of joy, we would love to celebrate this special day with you."
+            ),
+            e("img", {
+              className: "first-photo",
+              src: "Gemini_Generated_Image_oim6x0oim6x0oim6.png",
+              alt: "Moamen and Farah",
+              loading: "eager",
+            })
+          )
+        ),
+        e(
+          "section",
+          { className: "full-screen-section" },
+          e(ImageSlider)
+        ),
+        e(
+          "section",
+          { className: "full-screen-section" },
+          e(
+            "main",
+            { className: "card" },
+            e("p", { className: "small" }, "Event Details"),
+            e("div", { className: "divider" }),
+            e(
+              "div",
+              { className: "info-grid" },
+              e(
+                "div",
+                { className: "info-card" },
+                e("p", { className: "info-label" }, "Date & Time"),
+                e("p", { className: "info-main" }, "25/6/2026 · 7:30 PM")
+              ),
+              e(
+                "div",
+                { className: "info-card" },
+                e("p", { className: "info-label" }, "Site"),
+                e(
+                  "p",
+                  { className: "info-main" },
+                  e(
+                    "a",
+                    {
+                      className: "venue-link",
+                      href: "https://maps.app.goo.gl/Dnz1zMYrvzsw6N9C7",
+                      target: "_blank",
+                      rel: "noopener noreferrer",
+                    },
+                    "Open Location"
+                  )
+                )
+              ),
+            ),
+          )
+        )
+      );
+    }
+
+    function App() {
+      const [phase, setPhase] = useState("intro");
+      const audioRef = useRef(null);
+      const timersRef = useRef([]);
+      const volumeIntervalRef = useRef(null);
+
+      useEffect(function () {
+        return function () {
+          timersRef.current.forEach(function (id) {
+            window.clearTimeout(id);
+          });
+          if (volumeIntervalRef.current) {
+            window.clearInterval(volumeIntervalRef.current);
+          }
+        };
+      }, []);
+
+      function startIntroSequence() {
+        if (phase !== "intro") return;
+        setPhase("opening");
+
+        const audio = audioRef.current;
+        if (audio) {
+          audio.volume = 0.08;
+          const playPromise = audio.play();
+          if (playPromise && typeof playPromise.catch === "function") {
+            playPromise.catch(function () {});
+          }
+          volumeIntervalRef.current = window.setInterval(function () {
+            if (!audioRef.current) return;
+            const next = Math.min(audioRef.current.volume + 0.04, 0.95);
+            audioRef.current.volume = next;
+            if (next >= 0.95 && volumeIntervalRef.current) {
+              window.clearInterval(volumeIntervalRef.current);
+              volumeIntervalRef.current = null;
+            }
+          }, 260);
+        }
+
+        timersRef.current.push(
+          window.setTimeout(function () {
+            setPhase("revealing");
+          }, 1100)
+        );
+
+        timersRef.current.push(
+          window.setTimeout(function () {
+            setPhase("ready");
+          }, 2100)
+        );
+      }
+
+      return e(
+        React.Fragment,
+        null,
+        e("audio", {
+          ref: audioRef,
+          src: "https://serv2.albumaty.com/2025/Albumaty.Com_mhmwd_alasyly_wakhyra__-_mslsl_atnyn_ghyrna_-_ma_sabryn.mp3",
+          loop: true,
+          preload: "auto",
+        }),
+        e("div", { className: "blur-flash" + (phase === "opening" ? " active" : "") }),
+        phase === "intro" || phase === "opening"
+          ? e(IntroScreen, { isOpening: phase === "opening", onOpen: startIntroSequence })
+          : null,
+        phase === "revealing" || phase === "ready"
+          ? e(
+              "div",
+              { className: "main-page" + (phase === "ready" ? " ready" : "") },
+              e(InvitationCard)
+            )
+          : null
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById("root")).render(e(App));
+  </script>
+</body>
+</html>
