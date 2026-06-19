@@ -295,6 +295,43 @@
         }
       }
 
+      @keyframes introFall {
+        0% {
+          transform: translateY(-10vh) translateX(0) rotate(0deg);
+          opacity: 0;
+        }
+        10% {
+          opacity: 0.9;
+        }
+        90% {
+          opacity: 0.9;
+        }
+        100% {
+          transform: translateY(110vh) translateX(40px) rotate(360deg);
+          opacity: 0;
+        }
+      }
+
+      .intro-petal {
+        position: absolute;
+        top: 0;
+        width: 22px;
+        height: 15px;
+        border-radius: 60% 40% 60% 40%;
+        background: rgba(228, 148, 172, 0.85); /* rose color */
+        opacity: 0;
+        animation: introFall 6s linear infinite;
+        z-index: 0;
+        pointer-events: none;
+      }
+
+      .intro-petal:nth-child(even) {
+        background: rgba(243, 192, 204, 0.9);
+        width: 18px;
+        height: 14px;
+        border-radius: 50% 50% 40% 60%;
+      }
+
       .intro-screen {
         width: 100%;
         min-height: 100vh;
@@ -305,7 +342,7 @@
       }
 
       .envelope-wrap {
-        width: min(92vw, 380px);
+        width: min(94vw, 420px);
         perspective: 900px;
         text-align: center;
       }
@@ -313,11 +350,11 @@
       .envelope {
         position: relative;
         width: 100%;
-        height: 230px;
+        height: 250px;
         border-radius: 16px;
-        border: 1px solid #dccdc0;
-        background: linear-gradient(180deg, #fffaf4 0%, #f2e5d8 100%);
-        box-shadow: 0 14px 30px rgba(85, 62, 45, 0.16);
+        border: 1px solid #ebd0c0;
+        background: linear-gradient(180deg, #ffffff 0%, #fdf5ef 100%);
+        box-shadow: 0 16px 36px rgba(85, 62, 45, 0.12);
         overflow: hidden;
       }
 
@@ -327,7 +364,7 @@
         left: 0;
         width: 100%;
         height: 55%;
-        background: linear-gradient(180deg, #f6e9dc 0%, #ebd8c7 100%);
+        background: linear-gradient(180deg, #ffffff 0%, #f9efe5 100%);
         clip-path: polygon(0 0, 100% 0, 50% 100%);
         transform-origin: top center;
         transition: transform 1s ease;
@@ -456,38 +493,6 @@
         }
       }
 
-      .confetti-overlay {
-        position: fixed;
-        inset: 0;
-        pointer-events: none;
-        z-index: 9999;
-        overflow: hidden;
-      }
-
-      .confetti-piece {
-        position: absolute;
-        top: -20px;
-        opacity: 0;
-        animation: burstConfetti linear forwards;
-      }
-
-      @keyframes burstConfetti {
-        0% {
-          transform: translateY(-20px) rotate(0deg);
-          opacity: 0;
-        }
-        10% {
-          opacity: 1;
-        }
-        60% {
-          opacity: 1;
-        }
-        100% {
-          transform: translateY(110vh) rotate(var(--rotation));
-          opacity: 0;
-        }
-      }
-
       .flap-flower {
         position: absolute;
         bottom: 8px;
@@ -603,20 +608,43 @@
       const { useState, useEffect, useRef } = React;
 
       function IntroScreen(props) {
+        const introPetals = [
+          { left: 5, delay: 0, dur: 5 },
+          { left: 15, delay: 1.5, dur: 6.5 },
+          { left: 25, delay: 0.5, dur: 5.2 },
+          { left: 35, delay: 2, dur: 6 },
+          { left: 45, delay: 0.8, dur: 5.5 },
+          { left: 55, delay: 2.5, dur: 6.8 },
+          { left: 65, delay: 1.2, dur: 5.8 },
+          { left: 75, delay: 0.3, dur: 6.2 },
+          { left: 85, delay: 1.8, dur: 5.4 },
+          { left: 95, delay: 3, dur: 6.1 },
+        ];
+
         return e(
           "div",
-          { className: "intro-screen" },
+          {
+            className: "intro-screen",
+            style: { position: "relative", overflow: "hidden" },
+          },
+          introPetals.map(function (p, i) {
+            return e("span", {
+              key: "ip-" + i,
+              className: "intro-petal",
+              style: {
+                left: p.left + "%",
+                animationDelay: p.delay + "s",
+                animationDuration: p.dur + "s",
+              },
+            });
+          }),
           e(
             "div",
             { className: "envelope-wrap" },
             e(
               "div",
               { className: "envelope" + (props.isOpening ? " open" : "") },
-              e(
-                "div",
-                { className: "flap" },
-                e("div", { className: "flap-flower" }, ""),
-              ),
+              e("div", { className: "flap" }),
               e("div", { className: "letter" }, "Engagement Invitation"),
             ),
             e(
@@ -625,57 +653,6 @@
               props.isOpening ? "Opening..." : "Open Invitation",
             ),
           ),
-        );
-      }
-
-      function CelebrationAnimation() {
-        const [burstId, setBurstId] = useState(0);
-
-        useEffect(function () {
-          const intervalId = setInterval(function () {
-            setBurstId(function (b) {
-              return b + 1;
-            });
-          }, 6000); // 6 seconds
-          return function () {
-            clearInterval(intervalId);
-          };
-        }, []);
-
-        const confettiCount = 45;
-
-        return e(
-          "div",
-          { className: "confetti-overlay", key: burstId },
-          Array.from({ length: confettiCount }).map(function (_, i) {
-            const isCircle = Math.random() > 0.5;
-            const left = Math.random() * 100;
-            const duration = 2.5 + Math.random() * 2.5;
-            const delay = Math.random() * 0.5;
-            const colors = [
-              "#d98199",
-              "#7b5e57",
-              "#dccdc0",
-              "#f1b0bf",
-              "#e8ded3",
-            ];
-            const bg = colors[Math.floor(Math.random() * colors.length)];
-            const rotate = Math.floor(Math.random() * 360) + 360;
-            return e("div", {
-              key: i,
-              className: "confetti-piece",
-              style: {
-                left: left + "vw",
-                backgroundColor: bg,
-                animationDuration: duration + "s",
-                animationDelay: delay + "s",
-                borderRadius: isCircle ? "50%" : "2px",
-                width: isCircle ? "10px" : "8px",
-                height: isCircle ? "10px" : "16px",
-                "--rotation": (Math.random() > 0.5 ? rotate : -rotate) + "deg",
-              },
-            });
-          }),
         );
       }
 
@@ -911,7 +888,7 @@
           const audio = audioRef.current;
           if (audio) {
             try {
-              audio.currentTime = 30;
+              audio.currentTime = 25;
             } catch (err) {}
             audio.volume = 0.08;
             const playPromise = audio.play();
@@ -947,7 +924,7 @@
           null,
           e("audio", {
             ref: audioRef,
-            src: "https://serv100.albumaty.com/dl/mem/mnw3at/albums/afrahna/08_-_Ya_Deblt_El5toba.mp3",
+            src: "https://serv2.albumaty.com/2025/Albumaty.Com_mhmwd_alasyly_wakhyra__-_mslsl_atnyn_ghyrna_-_ma_sabryn.mp3",
             loop: true,
             preload: "auto",
           }),
@@ -967,7 +944,6 @@
                   className: "main-page" + (phase === "ready" ? " ready" : ""),
                 },
                 e(InvitationCard),
-                phase === "ready" ? e(CelebrationAnimation) : null,
               )
             : null,
         );
